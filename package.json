@@ -1,0 +1,29 @@
+{
+  "name": "infrastructure-express",
+  "version": "0.1.0",
+  "private": false,
+  "author": {
+    "name": "Stefan Stefanov",
+    "email": "s.h.stefanov@mail.bg"
+  },
+  "dependencies":{
+    "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+    "body-parser": "latest",
+    "connect-mongo": "latest",
+    "cookie-parser": "latest",
+    "express": "latest",
+    "express-session": "latest",
+    "jade": "latest",
+    "method-override": "latest",
+    "morgan": "latest",
+    "serve-favicon": "latest",
+    "underscore": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest"
+  },
+
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --full-trace --no-exit --throw-deprecation test"
+  }
+}
