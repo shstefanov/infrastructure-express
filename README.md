@@ -211,6 +211,69 @@ The Page class have abiity to perform more complex tasks for using as handlers.
 
     });
 
+Template engnes
+===============
+
+  Jade - uses .jade files as template
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "jade",
+      "cache":       true
+    }
+
+  HAML - uses haml files as templates
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "haml",
+      "cache":       true
+    }
+
+  HTML - just sends specified html file
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "html",
+      "cache":       true
+    }
+
+  Mustache - uses .mustache files as templates
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "mustache",
+      "cache":       true
+    }
+
+  Handlebars - uses .jbs files as templates
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "hbs",
+      "cache":       true,
+      "options": {
+        "layOutsDir":  "path",    //relative to views path folder, default 'layouts'
+        "partialsDir": "path",    //relative to views path folder, default 'partials'
+        "defaultLayout": "layout_name", //optional
+        "compilerOptions": {},      // http://handlebarsjs.com/reference.html
+
+      }
+    }
+
+  Hogan
+
+    "views":{
+      "path":        "templates",
+      "view_engine": "hogan",
+      "cache":       true.
+      options: {
+        "layout": "some_layout", //optional
+        "partials": { "foo": "bar" } //optional, https://github.com/vol4ok/hogan-express
+      }
+    }
+
+
 
 Api class
 =========

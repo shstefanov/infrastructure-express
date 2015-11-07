@@ -27,7 +27,7 @@ module.exports = function(cb){
     case "html":
       var cache = {};
       app.engine('.html', function(path, options, cb){ 
-        cb(null, cache[path] || (cache[path] = fs.readFileSync(path, "utf8")));
+        cb(null, (config.views.cache && cache[path]) || (cache[path] = fs.readFileSync(path, "utf8")));
       });
       break;
     case "mustache":
