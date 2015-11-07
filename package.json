@@ -6,23 +6,26 @@
     "name": "Stefan Stefanov",
     "email": "s.h.stefanov@mail.bg"
   },
-  "dependencies":{
-    "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+  "dependencies": {
     "body-parser": "latest",
     "connect-mongo": "latest",
     "cookie-parser": "latest",
+    "ejs": "^2.3.4",
     "express": "latest",
+    "express-handlebars": "^2.0.1",
     "express-session": "latest",
+    "hamljs": "^0.6.2",
+    "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
     "jade": "latest",
     "method-override": "latest",
     "morgan": "latest",
+    "mustache": "^2.2.0",
     "serve-favicon": "latest",
     "underscore": "latest"
   },
   "devDependencies": {
     "mocha": "latest"
   },
-
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive --colors --sort --check-leaks --full-trace --no-exit --throw-deprecation test"
   }

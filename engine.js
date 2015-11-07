@@ -10,6 +10,7 @@ module.exports = function(cb){
   var methodOverride = require('method-override'        );
   var bodyParser     = require('body-parser'            );
   var morgan         = require('morgan'                 );
+  var fs             = require("fs"                     );
 
   var env     = this;
   var app     = express();
@@ -17,7 +18,51 @@ module.exports = function(cb){
 
   app.set('port',  config.http.port || process.env.HTTP_PORT || 3000);
   app.set('views', path.join(config.rootDir, config.views.path));
-  app.set('view engine', config.views.view_engine);
+  switch(config.views.view_engine){
+    case "jade": app.set('view engine', "jade"); break;
+    case "haml":
+      var hamljs = require("hamljs");
+      app.engine('.haml', function(path, options, cb){ hamljs.renderFile(path, "utf8", options, cb); }); 
+      app.set('view engine', "hamljs"); break;
+    case "html":
+      var cache = {};
+      app.engine('.html', function(path, options, cb){ 
+        cb(null, cache[path] || (cache[path] = fs.readFileSync(path, "utf8")));
+      });
+      break;
+    case "mustache":
+      var cache = {}, mustache = require("mustache");
+      app.engine('.mustache', function(path, options, cb){ 
+        cb(null, mustache.render(cache[path] || (cache[path] = fs.readFileSync(path, "utf8")), options));
+      });
+      break;
+    case "hbs":
+      var exphbs  = require('express-handlebars');
+      app.engine('hbs', exphbs({
+        extname: "hbs",
+        layoutsDir:      config.views.path + "/"+((config.views.options || {}).layoutsDir  || 'layouts'  ) + "/",
+        partialsDir:     config.views.path + "/"+((config.views.options || {}).partialsDir || 'partials' ) + "/",
+        defaultLayout:   (config.views.options || {}).defaultLayout,
+        compilerOptions: (config.views.options || {}).compilerOptions
+      }));
+      app.set('view engine', 'hbs');
+      if(config.views.cache) app.enable('view cache');
+      break;
+    case "hogan":
+      app.set ('view engine', 'hogan')    //# use .hogan extension for templates 
+      if(config.views.options){
+        if(config.options.layout){
+          app.set ('layout', config.options.layout); //# use layout.html as the default layout 
+        }
+        if(config.views.options.partials){
+          app.set ('partials', config.views.options.partials);   //# define partials available to all pages 
+        }
+      }
+      if(config.views.cache) app.enable('view cache');
+      app.engine('hogan', require('hogan-express'));
+
+  }
+  
   
   if(config.http.favicon){
     var favicon = require( 'serve-favicon' );
