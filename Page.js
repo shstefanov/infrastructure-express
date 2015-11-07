@@ -80,7 +80,6 @@ var Page = Class.extend("Page", {
   },
 
   createSelfCaller: function( target, isPartOfChain, path ){
-    console.log("createSelfCaller: ", target);
     var self            = this;
     var i               = this.env.i;
     var parts           = target.split( "|" ).map( function(part){ return part.trim(); } );
@@ -91,18 +90,18 @@ var Page = Class.extend("Page", {
     var finalizer       = this.getFinalizer( isPartOfChain );
     var _               = require("underscore");
     return function(req, res, next){
-      var args = argumentsGetter( req, res );
+      var args = argumentsGetter.call(self, req, res, _ );
       args.push(function( err, data ){
         if(err) return next( err );
         dataPatcher ( res, data );
         finalizer   ( req, res, next );
       });
-      console.log("selfCaller: ", method);
       self[method].apply(self, args);
     }
   },
 
   createDoCaller: function( target, isPartOfChain, path ){
+    var self            = this;
     var i               = this.env.i;
     var parts           = target.split( "|" ).map( function(part){ return part.trim(); } );
     var address         = parts[0];
@@ -111,7 +110,7 @@ var Page = Class.extend("Page", {
     var finalizer       = this.getFinalizer( isPartOfChain );
     var _               = require("underscore");
     return function(req, res, next){
-      var args = argumentsGetter( req, res, _ );
+      var args = argumentsGetter.call(self, req, res, _ );
       args.unshift(address);
       args.push(function( err, data ){
         if(err) return next( err );
