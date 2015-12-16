@@ -1,6 +1,6 @@
 {
   "name": "infrastructure-express",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "author": {
     "name": "Stefan Stefanov",
@@ -15,7 +15,7 @@
     "express-handlebars": "^2.0.1",
     "express-session": "latest",
     "hamljs": "^0.6.2",
-    "infrastructure": "git+https://github.com/shstefanov/infrastructure.git#dev",
+    "infrastructure": "^1.0.0",
     "jade": "latest",
     "method-override": "latest",
     "morgan": "latest",
