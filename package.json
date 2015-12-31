@@ -1,6 +1,6 @@
 {
   "name": "infrastructure-express",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "author": {
     "name": "Stefan Stefanov",
@@ -21,6 +21,7 @@
     "morgan": "latest",
     "mustache": "^2.2.0",
     "serve-favicon": "latest",
+    "server-destroy": "^1.0.1",
     "underscore": "latest"
   },
   "devDependencies": {

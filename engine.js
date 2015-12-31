@@ -10,6 +10,7 @@ module.exports = function(cb){
   var methodOverride = require('method-override'        );
   var bodyParser     = require('body-parser'            );
   var morgan         = require('morgan'                 );
+  var enableDestroy  = require('server-destroy'         );
   var fs             = require("fs"                     );
 
   var env     = this;
@@ -113,9 +114,14 @@ module.exports = function(cb){
   env.engines.express = app;
   var server = http.createServer(app).listen(app.get('port'), function(err){
     if(err) return cb(err);
-    env.stops.push(function(cb){ server.close(); cb(); });
+    env.stops.push(function(cb){ 
+      server.destroy();
+      cb(); 
+    });
     env.i.do("log.sys", "http", 'Express server listening on port ' + app.get('port'));
     cb();
   });
+
+  enableDestroy(server);
 
 };
