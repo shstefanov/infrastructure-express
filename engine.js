@@ -33,8 +33,13 @@ module.exports = function(cb){
       break;
     case "mustache":
       var cache = {}, mustache = require("mustache");
-      app.engine('.mustache', function(path, options, cb){ 
+      app.engine('.mustache', config.views.cache ? function(path, options, cb){ 
         cb(null, mustache.render(cache[path] || (cache[path] = fs.readFileSync(path, "utf8")), options));
+      } : function(path, options, cb){
+        fs.readFile(path, "utf8", function(err, body){
+          if(err) throw err;
+          cb(null, mustache.render(body, options));          
+        })
       });
       break;
     case "hbs":
