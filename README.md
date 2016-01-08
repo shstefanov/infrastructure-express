@@ -279,3 +279,12 @@ Api class
 =========
 
 Same as Page, but withous the title, styles, javascripts, metatags, configs. Just renders collected in res.data data as json
+
+
+
+
+
+Changes
+=======
+
+In chains "#template/path.ext" sets or renders template

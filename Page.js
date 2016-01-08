@@ -57,7 +57,7 @@ var Page = Class.extend("Page", {
     if(_.isFunction(target)) return target;
     if(_.isString(target)){
       if(target.indexOf("@") === 0) return this.createSelfCaller(target);
-      else if(target.indexOf(".") === -1) return isPartOfChain ? this.createTemplateSetter(target) :  this.createTemplateRenderer(target);
+      else if(target.indexOf("#") === 0) return isPartOfChain ? this.createTemplateSetter(target.replace("#", "")) :  this.createTemplateRenderer(target.replace("#", ""));
       else return this.createDoCaller( target, isPartOfChain, path );
     }
     else if(_.isArray(target))  return this.createChain     ( target, isPartOfChain );
