@@ -56,8 +56,8 @@ var Page = Class.extend("Page", {
   parseCall: function(target, isPartOfChain, path ){
     if(_.isFunction(target)) return target;
     if(_.isString(target)){
-      if(target.indexOf("@") === 0) return this.createSelfCaller(target);
-      else if(target.indexOf(".") === -1) return isPartOfChain ? this.createTemplateSetter(target) :  this.createTemplateRenderer(target);
+      if(target.indexOf("@") === 0) return this.createSelfCaller(target, isPartOfChain);
+      else if(target.indexOf("#") === 0) return isPartOfChain ? this.createTemplateSetter(target.replace("#","")) :  this.createTemplateRenderer(target.replace("#",""));
       else return this.createDoCaller( target, isPartOfChain, path );
     }
     else if(_.isArray(target))  return this.createChain     ( target, isPartOfChain );
@@ -197,6 +197,7 @@ var Page = Class.extend("Page", {
 
   render: function(req, res){
     var data   = this.assets(res.data, req, res);
+    if(req.session) data.session = req.session;
     data.cache = this.env.helpers.resolve(this.env.config, "views.cache");
     res.render(data.template || this.template, data);
   },
