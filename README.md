@@ -195,7 +195,7 @@ The Page class have abiity to perform more complex tasks for using as handlers.
           next();
         },
 
-        "template_name",
+        "#template_name",
 
         [
           // Some subchain that can contain strings, objects, functions...
