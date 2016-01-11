@@ -82,7 +82,7 @@ var Page = Class.extend("Page", {
   createSelfCaller: function( target, isPartOfChain, path ){
     var self            = this;
     var i               = this.env.i;
-    var parts           = target.split( "|" ).map( function(part){ return part.trim(); } );
+    var parts           = target.replace(/([^|])([|])([^|])/g, "$1 $2 $3").split(/[^|][|][^|]/).map( function(part){ return part.trim(); } );
     var method          = parts[0].replace(/^@/, "");
 
     var argumentsGetter = this.createArgumentsGetter( parts[1] );
@@ -103,7 +103,7 @@ var Page = Class.extend("Page", {
   createDoCaller: function( target, isPartOfChain, path ){
     var self            = this;
     var i               = this.env.i;
-    var parts           = target.split( "|" ).map( function(part){ return part.trim(); } );
+    var parts           = target.replace(/([^|])([|])([^|])/g, "$1 $2 $3").split(/[^|][|][^|]/).map( function(part){ return part.trim(); } );
     var address         = parts[0];
     var argumentsGetter = this.createArgumentsGetter( parts[1] );
     var dataPatcher     = this.createDataPatcher( path || parts[2] );
