@@ -46,6 +46,8 @@ var Page = Class.extend("Page", {
       app.all(this.root+"*", this.parseCall(this.after, false).bind(this));
       env.i.do("log.sys", "route", "ALL"+line.slice("ALL".length)+ this.root+"*");        
     }
+
+    Class.apply(this, arguments);
   },
 
   handleError: function(err, req, res, next){
