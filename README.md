@@ -246,7 +246,7 @@ Template engnes
       "cache":       true
     }
 
-  Handlebars - uses .jbs files as templates
+  Handlebars - uses .hbs files as templates
 
     "views":{
       "path":        "templates",
