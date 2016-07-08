@@ -102,7 +102,19 @@ var Page = Class.extend("Page", {
     var dataPatcher     = this.createDataPatcher( path || parts[2] );
     var finalizer       = this.getFinalizer( isPartOfChain );
     var _               = require("underscore");
-    return function(req, res, next){
+    if(isPartOfChain){
+      return function(req, res, next){
+        var args = argumentsGetter.call(self, req, res, _ );
+        args.push(_.extend(function( err, data ){
+          if(err) return next( err );
+          dataPatcher ( res, data );
+          finalizer   ( req, res, next );
+        }, {finish: next.finish}));
+        self[method].apply(self, args);
+      }
+
+    }
+    else return function(req, res, next){
       var args = argumentsGetter.call(self, req, res, _ );
       args.push(function( err, data ){
         if(err) return next( err );
@@ -165,12 +177,24 @@ var Page = Class.extend("Page", {
     var self  = this;
     var chain = arr.map(function(target, index){
       var handler = self.parseCall( target, isPartOfChain || ( index < ( arr.length - 1 ) ) );
-      return function(req, res, next){
-        handler.call(self, req, res, function(err){
-          if(err) return self.handleError(err, req, res, next);
-          next( null, req, res );
-        });
+
+      if(isPartOfChain || ( index < ( arr.length - 1 ) ) ) {
+        return function(req, res, next){
+          handler.call(self, req, res, _.extend(function(err){
+            if(err) return self.handleError(err, req, res, next);
+            next( null, req, res );
+          }, {finish: next.finish}));
+        }      
       }
+      else{
+        return function(req, res, next){
+          handler.call(self, req, res, function(err){
+            if(err) return self.handleError(err, req, res, next);
+            next( null, req, res );
+          });
+        }        
+      }
+
     });
 
     chain.unshift( createDataNS );
