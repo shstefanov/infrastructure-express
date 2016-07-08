@@ -24,11 +24,7 @@ var Page = Class.extend("Page", {
       self.render( req, res );
     }
 
-    if(this.pre) {
-      app.all(this.root+"*", this.parseCall( this.pre, true ).bind(this));
-      env.i.do("log.sys", "route", "ALL"+line.slice("ALL".length)+ this.root+"*");        
-    }
-
+    var routes = [];
     for(var key in this){
       if(key.match(/^GET\s|^POST\s|^PUT\s|^DELETE\s|^ALL\s/)){
         var parts  = key.split(/\s+/);
@@ -37,14 +33,29 @@ var Page = Class.extend("Page", {
         if(parts[1].indexOf("*") === 0 || parts[1].indexOf("/") === 0) route = self.root+parts[1];
         else route  = path.join(self.root, parts[1]).replace(/\\/g, "/");
         route = route.replace(/\/\//g, "/");
-        app[method](route, this.parseCall(self[key], !!this.after ).bind(this));
-        env.i.do("log.sys", "route", method.toUpperCase()+line.slice(method.length)+ route);
+        if(route !== "/") route = route.replace(/\/$/, "");
+        routes.push({method: method, path: route, key: key});
       }
     }
 
+    if(this.pre) {
+      for(var i = 0; i<routes.length; i++){
+        var route = routes[i];
+        app[route.method](route.path, this.parseCall( this.pre, true ).bind(this));
+      }      
+    }
+
+    for(var i = 0; i<routes.length; i++){
+      var route = routes[i];
+      app[route.method](route.path, this.parseCall(self[route.key], !!this.after ).bind(this));
+      env.i.do("log.sys", "route", route.method.toUpperCase()+line.slice(route.method.length) + route.path);
+    }
+
     if(this.after) {
-      app.all(this.root+"*", this.parseCall(this.after, false).bind(this));
-      env.i.do("log.sys", "route", "ALL"+line.slice("ALL".length)+ this.root+"*");        
+      for(var i = 0; i<routes.length; i++){
+        var route = routes[i];
+        app[route.method](route.path, this.parseCall( this.after, false ).bind(this));
+      }      
     }
 
     Class.apply(this, arguments);

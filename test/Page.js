@@ -12,7 +12,8 @@ describe("Page" + currentFileMark, function(){
   it("Page pre handler", function(next){
 
     var PageWithPre = TestPage.extend("PageWithPre", {
-      pre: function(){}
+      pre: function(){},
+      "POST /": "#aaa"
     });
 
     var routes = {
@@ -36,9 +37,8 @@ describe("Page" + currentFileMark, function(){
       }
     });
 
-    assert.equal    (typeof routes.all["/test*"], "function");
+    assert.equal    (typeof routes.post["/test"], "function");
     assert.deepEqual(routes.get,    {});
-    assert.deepEqual(routes.post,   {});
     assert.deepEqual(routes.put,    {});
     assert.deepEqual(routes.delete, {});
 
@@ -48,7 +48,8 @@ describe("Page" + currentFileMark, function(){
   it("Page after handler", function(next){
 
     var PageWithAfter = TestPage.extend("PageWithAfter", {
-      after: function(){}
+      after: function(){},
+      "POST /": "#aaa"
     });
 
     var routes = {
@@ -71,9 +72,8 @@ describe("Page" + currentFileMark, function(){
       }
     });
 
-    assert.equal    (typeof routes.all["/test*"], "function");
+    assert.equal    (typeof routes.post["/test"], "function");
     assert.deepEqual(routes.get,    {});
-    assert.deepEqual(routes.post,   {});
     assert.deepEqual(routes.put,    {});
     assert.deepEqual(routes.delete, {});
 
@@ -152,7 +152,7 @@ describe("Page" + currentFileMark, function(){
   it("Page string handler should become template render function", function(next){
 
     var PageHandlers = TestPage.extend("PageHandlers", {
-      "GET /something":    "template_name"
+      "GET /something":    "#template_name"
     });
 
     var handler;
@@ -222,7 +222,7 @@ describe("Page" + currentFileMark, function(){
     var PageHandlers = TestPage.extend("PageHandlers", {
       template: "template_name",
       "GET /something":    [
-        "other_template",
+        "#other_template",
         function(req, res){
           res.data.param = 5;
           this.render(req, res);
@@ -266,7 +266,7 @@ describe("Page" + currentFileMark, function(){
           res.data = { param: 6 };
           setTimeout(next, 20);
         },
-        "other_template"
+        "#other_template"
       ]
     });
 
@@ -300,7 +300,7 @@ describe("Page" + currentFileMark, function(){
       template: "template_name",
       "GET /something":    [
         "some_target.something.some_method | req.url, req.param | some_result",
-        "other_template"
+        "#other_template"
       ]
     });
 
@@ -471,7 +471,7 @@ describe("Page" + currentFileMark, function(){
     var PageHandlers = TestPage.extend("PageHandlers", {
       template: "template_name",
       "GET /something": [
-        "other_template",
+        "#other_template",
         "target.object.method_1 | \"aaa\", req.value + 1 | arr1.first",
         "target.object.method_2 | \"bbb\", req.value + 2 | arr1.second",
         function(req, res, next){
